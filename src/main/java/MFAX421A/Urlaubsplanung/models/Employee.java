@@ -12,6 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Employee {
+
     @Id
     @GeneratedValue
     private Long id;

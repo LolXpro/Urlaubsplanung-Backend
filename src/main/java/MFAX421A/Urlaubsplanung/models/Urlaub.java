@@ -7,7 +7,12 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 @Entity
 @Table
@@ -24,6 +29,18 @@ public class Urlaub {
     private Urlaubstyp type;
     private String description;
     private Urlaubsstatus status;
-    
+
+    public List<LocalDate> daysBetween(){
+        Predicate<LocalDate> isWeekend = date -> date.getDayOfWeek() == DayOfWeek.SATURDAY
+                || date.getDayOfWeek() == DayOfWeek.SUNDAY;
+
+        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+
+        return Stream.iterate(startDate, date -> date.plusDays(1))
+                .limit(daysBetween)
+                .filter(isWeekend.negate())
+                .toList();
+    }
+
 }
 
