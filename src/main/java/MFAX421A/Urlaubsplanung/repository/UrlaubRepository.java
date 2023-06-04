@@ -10,5 +10,8 @@ public interface UrlaubRepository extends JpaRepository<Urlaub, Long> {
 
     List<Urlaub> findAllByStatus(Urlaubsstatus status);
 
+    List<Urlaub> findAllByUsername(String username);
+
+    List<Urlaub> findAllByUsernameAndStatus(String username, Urlaubsstatus status);
 
 }

@@ -7,23 +7,15 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @Entity
 @Table
 @Getter
 @Setter
-public class Urlaub {
-
+public class Employee {
     @Id
     @GeneratedValue
     private Long id;
     private String username;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private Urlaubstyp type;
-    private String description;
-    private Urlaubsstatus status;
-    
+    private int urlaubstage = 28;
+    private int sonderurlaubstage = 2;
 }
-
