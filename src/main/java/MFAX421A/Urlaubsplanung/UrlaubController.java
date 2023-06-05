@@ -56,6 +56,7 @@ public class UrlaubController {
             else {
                 employee.setSonderurlaubstage((employee.getSonderurlaubstage() - dayCount));
                 checkAbteilung(urlaub);
+                urlaub.setStatus(Urlaubsstatus.bearbeitung);
             }
             urlaubRepository.save(urlaub);
 
@@ -102,10 +103,12 @@ public class UrlaubController {
             Employee employee = employeeRepository.findByUsername(urlaub.getUsername());
 
             int dayCount = urlaub.daysBetween().size();
-            if (urlaub.getType() == Urlaubstyp.normal)
-                employee.setUrlaubstage((employee.getUrlaubstage() + dayCount));
-            if(urlaub.getType() == Urlaubstyp.special)
-                employee.setSonderurlaubstage((employee.getSonderurlaubstage() + dayCount));
+            if(urlaub.getStatus() != Urlaubsstatus.abgelehnt) {
+                if (urlaub.getType() == Urlaubstyp.normal)
+                    employee.setUrlaubstage((employee.getUrlaubstage() + dayCount));
+                if (urlaub.getType() == Urlaubstyp.special)
+                    employee.setSonderurlaubstage((employee.getSonderurlaubstage() + dayCount));
+            }
         });
 
 
@@ -118,7 +121,7 @@ public class UrlaubController {
         long otherEmployees = (employeeRepository.findAll().size() -1);
 
         List<LocalDate> urlaubstage = urlaub.daysBetween();
-        List<Urlaub> urlaubList = urlaubRepository.findAll();
+        List<Urlaub> urlaubList = urlaubRepository.findAllByStatusNot(Urlaubsstatus.abgelehnt);
         for (Urlaub val: urlaubList) {
             List<LocalDate> valTage = val.daysBetween();
             for (LocalDate date: valTage) {
