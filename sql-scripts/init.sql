@@ -27,7 +27,8 @@ create table employee
     id                  bigint        not null primary key AUTO_INCREMENT,
     sonderurlaubstage   int           not null,
     urlaubstage         int           not null,
-    username            varchar(255)  not null
+    username            varchar(255)  not null,
+    abteilung           varchar(255)  not null
 );
 
 create table employee_seq
@@ -37,10 +38,16 @@ create table employee_seq
 
 insert into employee_seq VALUES (0);
 
-insert into employee (sonderurlaubstage, urlaubstage, username)
+insert into employee (sonderurlaubstage, urlaubstage, username, abteilung)
 values
-    (2, 28, 'link'),
-    (2, 28, 'zelda'),
-    (2, 28, 'mario'),
-    (2, 28, 'luigi'),
-    (2, 28, 'demo-admin');
+    (2, 28, 'link', 'Legend of Zelda'),
+    (2, 28, 'zelda', 'Legend of Zelda'),
+    (2, 28, 'rhoam', 'Legend of Zelda'),
+    (2, 28, 'impa', 'Legend of Zelda'),
+    (2, 28, 'ganondorf', 'Legend of Zelda'),
+
+    (2, 28, 'mario', 'Super Mario Bros'),
+    (2, 28, 'luigi', 'Super Mario Bros'),
+    (2, 28, 'peach', 'Super Mario Bros'),
+    (2, 28, 'toad', 'Super Mario Bros'),
+    (2, 28, 'bowser', 'Super Mario Bros')

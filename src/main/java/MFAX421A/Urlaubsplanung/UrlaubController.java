@@ -25,11 +25,17 @@ public class UrlaubController {
     final EmployeeRepository employeeRepository;
 
     @GetMapping
-    public List<Urlaub> getUrlaube(@RequestParam(required = false) Urlaubsstatus status, @RequestParam(required = false) String username){
+    public List<Urlaub> getUrlaube(@RequestParam(required = false) Urlaubsstatus status,
+                                   @RequestParam(required = false) String username,
+                                   @RequestParam(required = false) String abteilung){
 
-        if (status != null && username != null) return urlaubRepository.findAllByUsernameAndStatus(username, status);
-        if (status != null) return urlaubRepository.findAllByStatus(status);
-        if (username != null) return urlaubRepository.findAllByUsername(username);
+        if(status != null && username != null && abteilung != null) return urlaubRepository.findAllByUsernameAndStatusAndAbteilung(username, status, abteilung);
+        if(username != null && abteilung != null) return urlaubRepository.findAllByUsernameAbteilung(username, abteilung);
+        if(status != null && abteilung != null) return urlaubRepository.findAllByStatusAndAbteilung(status, abteilung);
+        if(status != null && username != null) return urlaubRepository.findAllByUsernameAndStatus(username, status);
+        if(status != null) return urlaubRepository.findAllByStatus(status);
+        if(username != null) return urlaubRepository.findAllByUsername(username);
+        if(abteilung != null) return urlaubRepository.findAllByAbteilung(abteilung);
 
         return urlaubRepository.findAll();
     }
@@ -55,8 +61,6 @@ public class UrlaubController {
             if(employee.getSonderurlaubstage() < dayCount) urlaub.setStatus(Urlaubsstatus.abgelehnt);
             else {
                 employee.setSonderurlaubstage((employee.getSonderurlaubstage() - dayCount));
-                checkAbteilung(urlaub);
-                urlaub.setStatus(Urlaubsstatus.bearbeitung);
             }
             urlaubRepository.save(urlaub);
 
@@ -103,12 +107,10 @@ public class UrlaubController {
             Employee employee = employeeRepository.findByUsername(urlaub.getUsername());
 
             int dayCount = urlaub.daysBetween().size();
-            if(urlaub.getStatus() != Urlaubsstatus.abgelehnt) {
-                if (urlaub.getType() == Urlaubstyp.normal)
-                    employee.setUrlaubstage((employee.getUrlaubstage() + dayCount));
-                if (urlaub.getType() == Urlaubstyp.special)
-                    employee.setSonderurlaubstage((employee.getSonderurlaubstage() + dayCount));
-            }
+            if (urlaub.getType() == Urlaubstyp.normal)
+                employee.setUrlaubstage((employee.getUrlaubstage() + dayCount));
+            if(urlaub.getType() == Urlaubstyp.special)
+                employee.setSonderurlaubstage((employee.getSonderurlaubstage() + dayCount));
         });
 
 
@@ -121,7 +123,11 @@ public class UrlaubController {
         long otherEmployees = (employeeRepository.findAll().size() -1);
 
         List<LocalDate> urlaubstage = urlaub.daysBetween();
-        List<Urlaub> urlaubList = urlaubRepository.findAllByStatusNot(Urlaubsstatus.abgelehnt);
+        List<Urlaub> urlaubList = urlaubRepository
+                .findAllByStatusAndAbteilung(
+                        Urlaubsstatus.bearbeitung,
+                        employeeRepository.findByUsername(urlaub.getUsername()
+                        ).getAbteilung());
         for (Urlaub val: urlaubList) {
             List<LocalDate> valTage = val.daysBetween();
             for (LocalDate date: valTage) {

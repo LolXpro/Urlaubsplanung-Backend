@@ -17,6 +17,7 @@ public class Employee {
     @GeneratedValue
     private Long id;
     private String username;
+    private String abteilung;
     private int urlaubstage = 28;
     private int sonderurlaubstage = 2;
 }
