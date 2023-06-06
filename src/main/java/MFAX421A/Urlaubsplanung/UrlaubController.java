@@ -123,6 +123,8 @@ public class UrlaubController {
     private void checkAbteilung(Urlaub urlaub){
 
         long otherEmployees = (employeeRepository.findAll().size() -1);
+        List<Employee> notImUrlaub = employeeRepository.findAllByNotImUrlaubOrUsername(urlaub.getUsername());
+        urlaub.setVertretung(String.valueOf(notImUrlaub.get(0)));
 
         List<LocalDate> urlaubstage = urlaub.daysBetween();
         List<Urlaub> urlaubList = urlaubRepository

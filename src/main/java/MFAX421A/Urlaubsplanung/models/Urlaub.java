@@ -29,6 +29,7 @@ public class Urlaub {
     private Urlaubstyp type;
     private String description;
     private Urlaubsstatus status;
+    private String vertretung;
 
     public List<LocalDate> daysBetween(){
         Predicate<LocalDate> isWeekend = date -> date.getDayOfWeek() == DayOfWeek.SATURDAY

@@ -12,7 +12,8 @@ create table urlaub
     start_date  date         not null,
     status      smallint     not null,
     type        smallint     not null,
-    username    varchar(255) not null
+    username    varchar(255) not null,
+    vertretung  varchar(255) not null
 );
 
 create table urlaub_seq
