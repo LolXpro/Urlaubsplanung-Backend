@@ -106,11 +106,13 @@ public class UrlaubController {
 
             Employee employee = employeeRepository.findByUsername(urlaub.getUsername());
 
-            int dayCount = urlaub.daysBetween().size();
-            if (urlaub.getType() == Urlaubstyp.normal)
-                employee.setUrlaubstage((employee.getUrlaubstage() + dayCount));
-            if(urlaub.getType() == Urlaubstyp.special)
-                employee.setSonderurlaubstage((employee.getSonderurlaubstage() + dayCount));
+            if(urlaub.getStatus() != Urlaubsstatus.abgelehnt){
+                int dayCount = urlaub.daysBetween().size();
+                if (urlaub.getType() == Urlaubstyp.normal)
+                    employee.setUrlaubstage((employee.getUrlaubstage() + dayCount));
+                if(urlaub.getType() == Urlaubstyp.special)
+                    employee.setSonderurlaubstage((employee.getSonderurlaubstage() + dayCount));
+                }
         });
 
 
