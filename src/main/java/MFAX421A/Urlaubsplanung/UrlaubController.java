@@ -52,6 +52,9 @@ public class UrlaubController {
             else {
                 employee.setUrlaubstage((employee.getUrlaubstage() - dayCount));
                 checkAbteilung(urlaub);
+                Employee notImUrlaub = employeeRepository.findAllByNotImUrlaubOrUsernameAndAbteilung(urlaub.getUsername(), employeeRepository.findByUsername(urlaub.getUsername()).getAbteilung());
+                urlaub.setVertretung(notImUrlaub.getUsername());
+
             }
             urlaubRepository.save(urlaub);
 
@@ -61,6 +64,9 @@ public class UrlaubController {
             if(employee.getSonderurlaubstage() < dayCount) urlaub.setStatus(Urlaubsstatus.abgelehnt);
             else {
                 employee.setSonderurlaubstage((employee.getSonderurlaubstage() - dayCount));
+                Employee notImUrlaub = employeeRepository.findAllByNotImUrlaubOrUsernameAndAbteilung(urlaub.getUsername(), employeeRepository.findByUsername(urlaub.getUsername()).getAbteilung());
+                urlaub.setVertretung(notImUrlaub.getUsername());
+
             }
             urlaubRepository.save(urlaub);
 
@@ -123,8 +129,6 @@ public class UrlaubController {
     private void checkAbteilung(Urlaub urlaub){
 
         long otherEmployees = (employeeRepository.findAll().size() -1);
-        List<Employee> notImUrlaub = employeeRepository.findAllByNotImUrlaubOrUsernameAndAbteilung(urlaub.getUsername(), employeeRepository.findByUsername(urlaub.getUsername()).getAbteilung());
-        urlaub.setVertretung(String.valueOf(notImUrlaub.get(0)));
 
         List<LocalDate> urlaubstage = urlaub.daysBetween();
         List<Urlaub> urlaubList = urlaubRepository

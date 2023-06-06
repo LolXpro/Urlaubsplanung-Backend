@@ -13,7 +13,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query("""
     SELECT e
     from Employee e
-    where e.abteilung = :#{#abteilung} and e.username not in (select u.username from Urlaub u where u.username != :#{#username})
+    where e.abteilung = :#{#abteilung} and e.username <> :#{#username}
+    ORDER BY RAND()
+    LIMIT 1
     """)
-    List<Employee> findAllByNotImUrlaubOrUsernameAndAbteilung(@Param("username") String username, @Param("abteilung") String abteilung);
+    Employee findAllByNotImUrlaubOrUsernameAndAbteilung(@Param("username") String username, @Param("abteilung") String abteilung);
 }

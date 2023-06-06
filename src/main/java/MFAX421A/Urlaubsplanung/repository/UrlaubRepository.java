@@ -11,11 +11,30 @@ import java.util.List;
 
 @Repository
 public interface UrlaubRepository extends JpaRepository<Urlaub, Long> {
-
+    
+    @Query("""
+        SELECT u
+        FROM Urlaub u
+        where u.status = ?#{#status}
+        order by u.startDate
+    """)
     List<Urlaub> findAllByStatus(Urlaubsstatus status);
 
+    @Query("""
+        SELECT u
+        FROM Urlaub u
+        where u.username = ?#{#username}
+        order by u.startDate
+    """)
     List<Urlaub> findAllByUsername(String username);
 
+    @Query("""
+        SELECT u
+        FROM Urlaub u
+        where u.status = ?#{#status}
+        and u.username = ?#{#username}
+        order by u.startDate
+    """)
     List<Urlaub> findAllByUsernameAndStatus(String username, Urlaubsstatus status);
 
     @Query("""
@@ -23,6 +42,7 @@ public interface UrlaubRepository extends JpaRepository<Urlaub, Long> {
         FROM Urlaub u
         where u.username
         in (select e.username from Employee e where e.abteilung = ?#{#abteilung})
+        order by u.startDate
     """)
     List<Urlaub> findAllByAbteilung(@Param("abteilung") String abteilung);
 
@@ -33,6 +53,7 @@ public interface UrlaubRepository extends JpaRepository<Urlaub, Long> {
         in (select e.username from Employee e where e.abteilung = ?#{#abteilung}
         and u.username = ?#{#username})
         and u.status = ?#{#status}
+        order by u.startDate
     """)
     List<Urlaub> findAllByUsernameAndStatusAndAbteilung(@Param("username") String username,
                                                         @Param("status") Urlaubsstatus status,
@@ -44,6 +65,7 @@ public interface UrlaubRepository extends JpaRepository<Urlaub, Long> {
         where u.username
         in (select e.username from Employee e where e.abteilung = ?#{#abteilung}
         and u.username = ?#{#username})
+        order by u.startDate
     """)
     List<Urlaub> findAllByUsernameAbteilung(@Param("username") String username,
                                             @Param("abteilung") String abteilung);
@@ -54,6 +76,7 @@ public interface UrlaubRepository extends JpaRepository<Urlaub, Long> {
         where u.username
         in (select e.username from Employee e where e.abteilung = ?#{#abteilung})
         and u.status = ?#{#status}
+        order by u.startDate
     """)
     List<Urlaub> findAllByStatusAndAbteilung(@Param("status") Urlaubsstatus status,
                                              @Param("abteilung") String abteilung);
